@@ -2,363 +2,549 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система «Солдаут» | Сопровождение экспертов</title>
+    <meta name="viewport" content="width=1200">
+    <title>Программа сопровождения</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Новая премиальная палитра */
-            --bg-color: #FAFAF9; /* Жемчужно-бежевый */
+            --bg: #FAFAF7;
             --white: #FFFFFF;
-            --text-main: #1E293B; /* Глубокий графит/Slate */
-            --text-secondary: #64748B; /* Мягкий серый с синим подтоном */
-            --accent: #0F172A; /* Насыщенный индиго/Navy */
-            --highlight: #C5A880; /* Приглушенное золото / Champagne */
-            --border: #E2E8F0;
-            --premium-glow: rgba(15, 23, 42, 0.04);
+            --sand: #F3F0EA;
+            --dark: #12141D;
+            --dark-card: #1A1D2B;
+            --gold: #B99A5B;
+            --gold-soft: rgba(185,154,91,0.10);
+            --gold-border: rgba(185,154,91,0.28);
+            --green: #34C759;
+            --green-soft: rgba(52,199,89,0.08);
+            --graphite: #1A1A1A;
+            --text: #2A2A2A;
+            --text-sec: #6B6B6B;
+            --text-muted: #9A9A9A;
+            --border: #E5E2DC;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.07);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.10);
+            --r: 20px;
+            --r-sm: 14px;
+            --r-xs: 10px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;font-size:16px;}
+        body{
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);line-height:1.7;
+            -webkit-font-smoothing:antialiased;overflow-x:hidden;
+            min-width:1200px;
+        }
+        h1,h2,h3{font-family:'Playfair Display',Georgia,serif;line-height:1.15;color:var(--graphite);}
+        .container{max-width:1120px;margin:0 auto;padding:0 32px;}
+
+        .reveal{opacity:0;transform:translateY(36px);transition:all .9s cubic-bezier(.16,1,.3,1);}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+        .reveal-d1{transition-delay:.1s;}.reveal-d2{transition-delay:.2s;}.reveal-d3{transition-delay:.3s;}
+
+        /* NAV */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;transition:all .4s;}
+        .nav.scrolled{background:rgba(250,250,247,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:12px 0;border-bottom:1px solid var(--border);}
+        .nav-inner{display:flex;justify-content:space-between;align-items:center;}
+        .nav-logo{font-size:14px;font-weight:600;color:var(--text-muted);text-decoration:none;letter-spacing:.06em;text-transform:lowercase;}
+        .nav-cta{padding:10px 28px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--graphite);border:1.5px solid var(--graphite);border-radius:100px;transition:all .3s;}
+        .nav-cta:hover{background:var(--graphite);color:#fff;}
+
+        /* HERO */
+        .hero{padding:160px 0 100px;text-align:center;position:relative;overflow:hidden;}
+        .hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(185,154,91,.06) 0%,transparent 65%);pointer-events:none;}
+        .hero-badge{
+            display:inline-flex;align-items:center;gap:10px;padding:8px 22px;
+            background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:100px;
+            font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;
+        }
+        .hero-badge-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+        @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(185,154,91,.4);}50%{box-shadow:0 0 0 6px rgba(185,154,91,0);}}
+        .hero h1{font-size:56px;font-weight:700;letter-spacing:-.02em;margin-bottom:24px;}
+        .hero h1 em{color:var(--gold);font-style:italic;font-weight:500;}
+        .hero-sub{font-size:18px;color:var(--text-sec);line-height:1.8;margin:0 auto 48px;max-width:620px;}
+        .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+        .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 40px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;letter-spacing:.04em;text-decoration:none;border-radius:100px;transition:all .35s;cursor:pointer;border:none;}
+        .btn-dark{background:var(--graphite);color:#fff;}
+        .btn-dark:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(185,154,91,.25);}
+        .btn-ghost{background:transparent;color:var(--text);border:1.5px solid var(--border);}
+        .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+        .btn-gold{background:var(--gold);color:#fff;}
+        .btn-gold:hover{background:#c9a766;transform:translateY(-2px);box-shadow:0 8px 24px rgba(185,154,91,.35);}
+
+        /* SOCIAL PROOF BAR */
+        .social-proof{padding:48px 0;border-bottom:1px solid var(--border);}
+        .sp-inner{display:flex;justify-content:center;gap:48px;}
+        .sp-item{text-align:center;}
+        .sp-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold);}
+        .sp-label{font-size:12px;color:var(--text-muted);font-weight:500;letter-spacing:.03em;margin-top:4px;}
+
+        /* CHAT SECTION */
+        .chat-section{padding:100px 0;}
+        .chat-grid{display:grid;grid-template-columns:1fr 380px;gap:80px;align-items:center;}
+        .chat-text h2{font-size:42px;margin-bottom:20px;}
+        .chat-text p{font-size:16px;color:var(--text-sec);line-height:1.8;margin-bottom:24px;}
+        .chat-text .highlight-box{
+            padding:20px 24px;background:var(--gold-soft);border-left:3px solid var(--gold);
+            border-radius:0 var(--r-xs) var(--r-xs) 0;font-size:15px;color:var(--text);line-height:1.7;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* PHONE MOCKUP — COMPACT */
+        .phone-mockup{
+            width:280px;margin:0 auto;
+            background:var(--white);border-radius:32px;
+            box-shadow:var(--shadow-lg),0 0 0 1px rgba(0,0,0,.06);
+            padding:10px;
+        }
+        .phone-screen{background:var(--sand);border-radius:24px;overflow:hidden;}
+        .phone-header{
+            background:var(--white);padding:12px 16px 10px;
+            border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;
+        }
+        .phone-avatar{width:30px;height:30px;border-radius:50%;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold);}
+        .phone-name{font-size:13px;font-weight:600;color:var(--graphite);}
+        .phone-status{font-size:10px;color:var(--green);font-weight:500;}
+        .phone-chat{padding:14px 12px;display:flex;flex-direction:column;gap:8px;}
+        .msg{max-width:82%;padding:10px 14px;font-size:12px;line-height:1.5;border-radius:16px;position:relative;}
+        .msg-in{background:var(--white);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
+        .msg-out{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+        .msg-time{font-size:9px;opacity:.5;margin-top:3px;display:block;}
+        .msg-green{background:var(--green-soft);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid rgba(52,199,89,.15);}
 
-        body {
-            font-family: 'Manrope', -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+        /* ABOUT */
+        .about{padding:100px 0;background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+        .about-grid{display:grid;grid-template-columns:320px 1fr;gap:72px;align-items:start;}
+        .about-photo{
+            width:100%;aspect-ratio:3/4;background:var(--sand);border-radius:var(--r);
+            display:flex;align-items:center;justify-content:center;border:1px solid var(--border);
+        }
+        .about-photo-placeholder{text-align:center;padding:32px;}
+        .about-photo-placeholder p{font-size:14px;color:var(--text-muted);font-style:italic;line-height:1.6;}
+        .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+        .about h2{font-size:38px;margin-bottom:20px;}
+        .about-text{font-size:16px;color:var(--text-sec);margin-bottom:32px;line-height:1.8;}
+        .about-hint{
+            font-size:14px;color:var(--text-muted);font-style:italic;padding:20px 24px;
+            background:var(--bg);border-radius:var(--r-xs);border-left:3px solid var(--gold-border);line-height:1.7;
         }
 
-        .container {
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 0 24px;
+        /* DARK FORMULA */
+        .formula-section{
+            background:var(--dark);padding:100px 0;text-align:center;
+            position:relative;overflow:hidden;
         }
-
-        h1, h2, h3, h4 { letter-spacing: -0.02em; line-height: 1.2; color: var(--accent); }
-
-        /* HERO SECTION */
-        .hero {
-            padding: 140px 0 100px;
-            text-align: center;
-            background: linear-gradient(180deg, #FFFFFF 0%, #FAFAF9 100%);
-            border-bottom: 1px solid var(--border);
+        .formula-section::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(185,154,91,.08) 0%,transparent 60%);pointer-events:none;}
+        .formula-section h2{font-size:38px;color:#fff;margin-bottom:12px;}
+        .formula-section .sub{font-size:16px;color:rgba(255,255,255,.45);margin-bottom:48px;}
+        .formula-box{
+            display:inline-block;padding:40px 64px;
+            border:1px solid rgba(255,255,255,.1);border-radius:var(--r);
+            background:var(--dark-card);position:relative;
         }
+        .formula-box::after{content:'';position:absolute;top:8px;left:8px;right:-8px;bottom:-8px;border:1px solid rgba(185,154,91,.15);border-radius:var(--r);z-index:-1;}
+        .formula-text{font-family:'Playfair Display',serif;font-size:36px;color:#fff;letter-spacing:2px;font-weight:400;}
+        .formula-text span{color:var(--gold);}
+        .formula-note{font-size:13px;color:rgba(255,255,255,.35);margin-top:20px;letter-spacing:.03em;}
 
-        .hero h1 {
-            font-size: 56px;
-            font-weight: 800;
-            margin-bottom: 24px;
+        /* PHASES */
+        .phases-section{padding:100px 0;}
+        .section-title{text-align:center;font-size:44px;margin-bottom:16px;}
+        .section-sub{text-align:center;font-size:17px;color:var(--text-sec);max-width:600px;margin:0 auto 60px;}
+        .phases{display:flex;flex-direction:column;gap:24px;}
+        .phase{
+            display:grid;grid-template-columns:100px 1fr 240px;gap:0;
+            background:var(--white);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;transition:all .4s;
         }
+        .phase:hover{box-shadow:var(--shadow-md);border-color:var(--gold-border);}
+        .phase-num-col{display:flex;align-items:center;justify-content:center;background:var(--bg);border-right:1px solid var(--border);}
+        .phase-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--gold);font-style:italic;opacity:.6;}
+        .phase-body{padding:40px 36px;}
+        .phase-week{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+        .phase-body h3{font-size:26px;margin-bottom:14px;font-family:'Playfair Display',serif;}
+        .phase-body>p{font-size:15px;color:var(--text-sec);line-height:1.8;margin-bottom:24px;}
+        .phase-tags{display:flex;flex-wrap:wrap;gap:8px;}
+        .tag{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;background:var(--bg);border-radius:100px;font-size:12px;font-weight:600;color:var(--text);}
+        .tag::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;flex-shrink:0;}
 
-        .hero h1 span { color: var(--highlight); }
+        .phase-mockup{display:flex;align-items:center;justify-content:center;background:var(--bg);border-left:1px solid var(--border);padding:20px;}
+        .mini-mockup{width:100%;max-width:200px;background:var(--white);border-radius:16px;box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;}
+        .mm-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+        .mm-dot{width:7px;height:7px;border-radius:50%;}
+        .mm-dot-r{background:#FF5F57;}.mm-dot-y{background:#FFBD2E;}.mm-dot-g{background:#28CA41;}
+        .mm-body{padding:14px;display:flex;flex-direction:column;gap:8px;}
+        .mm-line{height:7px;border-radius:4px;background:var(--sand);}
+        .mm-line-gold{background:var(--gold-soft);border:1px solid var(--gold-border);}
+        .mm-line-short{width:60%;}.mm-line-med{width:80%;}
+        .mm-chat-mini{display:flex;flex-direction:column;gap:5px;padding:10px;}
+        .mm-msg{padding:7px 10px;border-radius:10px;font-size:9px;line-height:1.4;max-width:85%;}
+        .mm-msg-in{background:var(--sand);color:var(--text-sec);align-self:flex-start;border-bottom-left-radius:3px;}
+        .mm-msg-out{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
 
-        .hero p.subtitle {
-            font-size: 24px;
-            color: var(--text-secondary);
-            font-weight: 400;
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
+        /* INCLUDED */
+        .included{padding:100px 0;background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+        .inc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+        .inc-item{padding:32px 28px;border:1px solid var(--border);border-radius:var(--r-sm);transition:all .3s;}
+        .inc-item:hover{border-color:var(--gold-border);box-shadow:var(--shadow-sm);}
+        .inc-icon{font-size:28px;margin-bottom:16px;display:block;}
+        .inc-item h4{font-family:'Inter',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px;color:var(--graphite);}
+        .inc-item p{font-size:14px;color:var(--text-sec);line-height:1.7;}
 
-        /* PAIN POINTS */
-        .pain-points { padding: 100px 0; }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-header h2 { font-size: 40px; font-weight: 700; }
-        .section-header p { font-size: 18px; color: var(--text-secondary); margin-top: 12px; }
-
-        .pain-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
-        }
-
-        .pain-card {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px var(--premium-glow);
-            border: 1px solid rgba(197, 168, 128, 0.1); /* Легкий золотой отблеск на границе */
-        }
-
-        .pain-card h3 { 
-            font-size: 22px; 
-            margin-bottom: 16px; 
-            border-bottom: 2px solid var(--highlight); 
-            padding-bottom: 16px; 
-            display: inline-block;
-        }
-
-        /* METHODOLOGY TIMELINE */
-        .timeline-section {
-            background: var(--white);
-            padding: 100px 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .phase {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 60px;
-            padding: 40px;
-            background: var(--bg-color);
-            border-radius: 24px;
-            transition: transform 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .phase:hover { 
-            transform: translateY(-5px); 
-            border-color: var(--border);
-            box-shadow: 0 10px 30px var(--premium-glow);
-        }
-        
-        .phase:last-child { margin-bottom: 0; }
-
-        .phase-num {
-            font-size: 80px;
-            font-weight: 800;
-            color: var(--highlight);
-            line-height: 0.8;
-            opacity: 0.8;
-        }
-
-        .phase-content h3 { font-size: 28px; margin-bottom: 16px; }
-        .phase-content p { font-size: 16px; color: var(--text-secondary); margin-bottom: 24px; }
-        
-        .artifact-list { list-style: none; }
-        .artifact-list li {
-            padding-left: 24px;
-            position: relative;
-            margin-bottom: 12px;
-            font-weight: 500;
-            color: var(--text-main);
-        }
-        .artifact-list li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--highlight);
-            font-weight: bold;
-        }
-
-        /* MATH BLOCK */
-        .math-section {
-            padding: 100px 0;
-            text-align: center;
-            background: var(--accent);
-            color: var(--white);
-        }
-
-        .math-section h2 { color: var(--white); }
-
-        .math-box {
-            font-family: monospace;
-            font-size: 32px;
-            background: rgba(255,255,255,0.05);
-            padding: 24px 40px;
-            border-radius: 16px;
-            display: inline-block;
-            margin-top: 30px;
-            letter-spacing: 1px;
-            border: 1px solid rgba(197, 168, 128, 0.3);
-            color: var(--highlight);
-        }
+        /* TESTIMONIALS */
+        .testi{padding:100px 0;}
+        .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+        .testi-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:32px;display:flex;flex-direction:column;transition:all .3s;}
+        .testi-card:hover{box-shadow:var(--shadow-md);}
+        .testi-quote{font-size:15px;color:var(--text-sec);line-height:1.8;flex:1;margin-bottom:24px;font-style:italic;}
+        .testi-author{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--border);}
+        .testi-ava{width:40px;height:40px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gold);}
+        .testi-name{font-size:14px;font-weight:600;color:var(--graphite);}
+        .testi-role{font-size:12px;color:var(--text-muted);}
 
         /* PRICING */
-        .pricing-section { padding: 100px 0; }
-        
-        .price-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-        }
+        .pricing{padding:100px 0;background:var(--white);border-top:1px solid var(--border);}
+        .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:880px;margin:0 auto;}
+        .price-card{padding:48px 40px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);text-align:center;transition:all .3s;position:relative;}
+        .price-card:hover{box-shadow:var(--shadow-md);}
+        .price-card.featured{background:var(--white);border-color:var(--gold);box-shadow:var(--shadow-lg);}
+        .price-card.featured::before{content:'Выгодно';position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 20px;border-radius:100px;white-space:nowrap;}
+        .price-tier{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;}
+        .price-amount{font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:var(--graphite);margin-bottom:4px;}
+        .price-period{font-size:14px;color:var(--text-muted);margin-bottom:24px;}
+        .price-desc{font-size:14px;color:var(--text-sec);line-height:1.7;margin-bottom:28px;min-height:50px;}
+        .price-features{list-style:none;text-align:left;margin-bottom:32px;}
+        .price-features li{padding:10px 0;font-size:14px;color:var(--text);border-bottom:1px solid rgba(0,0,0,.04);display:flex;align-items:center;gap:12px;}
+        .price-features li::before{content:'✓';color:var(--gold);font-weight:700;font-size:13px;}
 
-        .price-card {
-            background: var(--white);
-            padding: 50px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            position: relative;
-        }
+        /* FAQ */
+        .faq{padding:100px 0;border-top:1px solid var(--border);}
+        .faq-list{max-width:720px;margin:48px auto 0;}
+        .faq-item{border-bottom:1px solid var(--border);}
+        .faq-q{width:100%;background:none;border:none;padding:24px 0;font-family:'Inter',sans-serif;font-size:16px;font-weight:600;color:var(--graphite);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:color .3s;}
+        .faq-q:hover{color:var(--gold);}
+        .faq-q::after{content:'+';font-size:22px;font-weight:300;color:var(--gold);transition:transform .3s;flex-shrink:0;margin-left:16px;}
+        .faq-item.open .faq-q::after{transform:rotate(45deg);}
+        .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;}
+        .faq-item.open .faq-a{max-height:300px;padding-bottom:24px;}
+        .faq-a p{font-size:15px;color:var(--text-sec);line-height:1.8;}
 
-        .price-card.premium {
-            border: 2px solid var(--highlight);
-            box-shadow: 0 20px 40px var(--premium-glow);
-        }
+        /* FINAL CTA */
+        .final-cta{padding:120px 0;background:var(--dark);text-align:center;position:relative;overflow:hidden;}
+        .final-cta::before{content:'';position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(185,154,91,.06) 0%,transparent 60%);pointer-events:none;}
+        .final-cta h2{color:#fff;font-size:44px;margin-bottom:20px;}
+        .final-cta h2 em{color:var(--gold);font-weight:500;}
+        .final-cta .container>p{color:rgba(255,255,255,.4);font-size:17px;margin-bottom:48px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;}
 
-        .badge {
-            position: absolute;
-            top: -14px;
-            left: 50px;
-            background: var(--highlight);
-            color: var(--white);
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .price-card h4 { font-size: 24px; color: var(--text-secondary); margin-bottom: 16px; }
-        .price-card .amount { font-size: 48px; font-weight: 800; margin-bottom: 24px; color: var(--accent); }
-        
-        .btn {
-            display: block;
-            text-align: center;
-            background: var(--accent);
-            color: var(--white);
-            text-decoration: none;
-            padding: 18px 32px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s;
-            margin-top: 30px;
-        }
-
-        .btn:hover { background: #1E293B; transform: translateY(-2px); }
-        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-        .btn-outline:hover { background: var(--accent); color: var(--white); }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 40px; }
-            .pain-grid, .price-grid { grid-template-columns: 1fr; }
-            .phase { flex-direction: column; gap: 20px; }
-            .math-box { font-size: 20px; padding: 16px; }
-        }
+        .footer{padding:36px 0;background:var(--dark);border-top:1px solid rgba(255,255,255,.05);text-align:center;}
+        .footer p{font-size:12px;color:rgba(255,255,255,.25);}
     </style>
 </head>
 <body>
 
-    <!-- HERO -->
-    <header class="hero">
-        <div class="container">
-            <h1>Монетизация твердой экспертизы.<br><span>Без выгорания и танцев в сторис.</span></h1>
-            <p class="subtitle">Система «Солдаут»: 60 дней индивидуального сопровождения для интеграции управляемой воронки продаж в вашу практику. Прогнозируемый выход на 500 000₽+/мес.</p>
-        </div>
-    </header>
+<nav class="nav" id="nav">
+    <div class="container nav-inner">
+        <a href="#" class="nav-logo">программа сопровождения</a>
+        <a href="#pricing" class="nav-cta">Форматы</a>
+    </div>
+</nav>
 
-    <!-- PAIN POINTS -->
-    <section class="pain-points container">
-        <div class="section-header">
-            <h2>Почему стандартные запуски не работают для профессионалов?</h2>
-            <p>Врачи, юристы и практики офлайн-бизнеса сталкиваются с иной реальностью.</p>
-        </div>
-        <div class="pain-grid">
-            <div class="pain-card">
-                <h3>Риск репутации</h3>
-                <p>Вы не можете позволить себе агрессивные прогревы, давление на боли и дешевые манипуляции. Ваша аудитория интеллектуальна, и ей нужен уважительный диалог, а не классический «инфобиз».</p>
+<header class="hero">
+    <div class="container">
+        <div class="reveal" style="max-width:800px;margin:0 auto;">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Набор открыт · 10 мест в группе
             </div>
-            <div class="pain-card">
-                <h3>Дефицит времени</h3>
-                <p>У вас есть реальная практика, пациенты, клиенты. Вы физически не можете тратить по 4 часа в день на генерацию контента, написание постов и монтаж роликов. Блог должен быть активом, а не второй работой.</p>
+            <h1>Ваш опыт уже стоит<br>дорого. Осталось<br><em>показать это рынку.</em></h1>
+            <p class="hero-sub">8 недель совместной работы: собираем продукт, выстраиваем продажи через блог, получаем первых клиентов. Я рядом на каждом шаге.</p>
+            <div class="hero-actions">
+                <a href="#pricing" class="btn btn-dark">Посмотреть форматы</a>
+                <a href="#how" class="btn btn-ghost">Как это работает</a>
             </div>
         </div>
-    </section>
+    </div>
+</header>
 
-    <!-- METHODOLOGY -->
-    <section class="timeline-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Архитектура продукта: 8 недель работы</h2>
-                <p>Это не курс в записи. Это внедрение бизнес-процессов под моим личным контролем.</p>
+<section class="social-proof">
+    <div class="container">
+        <div class="sp-inner reveal">
+            <div class="sp-item"><div class="sp-num">—</div><div class="sp-label">Участников прошли программу</div></div>
+            <div class="sp-item"><div class="sp-num">—</div><div class="sp-label">Средний рост дохода</div></div>
+            <div class="sp-item"><div class="sp-num">—</div><div class="sp-label">Ниш и специализаций</div></div>
+            <div class="sp-item"><div class="sp-num">8</div><div class="sp-label">Недель до результата</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="chat-section" id="how">
+    <div class="container">
+        <div class="chat-grid">
+            <div class="chat-text reveal">
+                <div class="eyebrow">Как выглядит работа</div>
+                <h2>Мы работаем вместе,<br>и вы видите результат<br>в моменте</h2>
+                <p>Каждую неделю - созвоны, разборы, конкретные шаги. Вы приходите с задачей, уходите с решением. Между созвонами - чат, где я и группа помогаем в реальном времени.</p>
+                <div class="highlight-box">Это сопровождение, где я делаю вместе с вами. Формат, в котором вы получаете и стратегию, и поддержку на внедрении.</div>
             </div>
-
-            <div class="phase">
-                <div class="phase-num">01</div>
-                <div class="phase-content">
-                    <h3>Фундамент и Быстрые деньги (Недели 1-2)</h3>
-                    <p>Люди платят за решение сложных проблем, а не за ваше время. Мы уходим от разовых дешевых консультаций и проектируем премиальный продукт (сопровождение, долгосрочный консалтинг). Первые продажи делаем по вашей теплой базе.</p>
-                    <ul class="artifact-list">
-                        <li>Личная стратегическая 1-to-1 сессия</li>
-                        <li>Оцифрованный оффер с чеком от 50 000₽ до 300 000₽</li>
-                        <li>Алгоритм закрытия первых 3-4 клиентов без создания нового контента</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="phase">
-                <div class="phase-num">02</div>
-                <div class="phase-content">
-                    <h3>Система конверсии (Недели 3-6)</h3>
-                    <p>Выстраиваем предсказуемую воронку. Аудитория должна прогреваться автоматически, потребляя ваш экспертный контент, выстроенный в правильной последовательности.</p>
-                    <ul class="artifact-list">
-                        <li>Архитектура контентной воронки (от первого касания до заявки)</li>
-                        <li>Шаблоны и сценарии контента для занятых профессионалов</li>
-                        <li>Скрипты экологичных продаж на диагностических созвонах</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="phase">
-                <div class="phase-num">03</div>
-                <div class="phase-content">
-                    <h3>Масштабирование и Автоматизация (Недели 7-8)</h3>
-                    <p>Продукт продается, юнит-экономика сходится. Теперь наша задача — снизить вашу операционную нагрузку, чтобы онлайн-бизнес занимал не более 3-4 часов в неделю.</p>
-                    <ul class="artifact-list">
-                        <li>Регламенты для делегирования механических задач</li>
-                        <li>Найм подрядчиков (ассистент, монтажер) из моей проверенной базы</li>
-                        <li>Стратегия реинвестирования для кратного роста</li>
-                    </ul>
+            <div class="reveal reveal-d2">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <div class="phone-avatar">Н</div>
+                            <div>
+                                <div class="phone-name">Наставник</div>
+                                <div class="phone-status">онлайн</div>
+                            </div>
+                        </div>
+                        <div class="phone-chat">
+                            <div class="msg msg-in">Переделала оффер, как обсуждали. Глянешь?<span class="msg-time">10:12</span></div>
+                            <div class="msg msg-out">Смотрю. Чек подняла, правильно. Доработаем формулировку результата<span class="msg-time">10:14</span></div>
+                            <div class="msg msg-in">Вот так: «Выстроим систему на 5 заявок в день»?<span class="msg-time">10:18</span></div>
+                            <div class="msg msg-out">Уже лучше. Добавь срок и нишу. Скину пример<span class="msg-time">10:19</span></div>
+                            <div class="msg msg-green">🎉 Первая оплата! 85 000₽<span class="msg-time">14:32</span></div>
+                            <div class="msg msg-out">Вот это я люблю. Разберем, как масштабировать<span class="msg-time">14:33</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- MATH SECTION -->
-    <section class="math-section">
-        <div class="container">
-            <h2>Декомпозиция вашей цели</h2>
-            <p style="font-size: 20px; opacity: 0.8; margin-top: 10px;">Вам не нужны миллионы подписчиков. Вам нужна правильная конверсия и высокий чек.</p>
-            <div class="math-box">
-                5 клиентов × 100 000₽ = 500 000₽
+<section class="about" id="about">
+    <div class="container about-grid">
+        <div class="about-photo reveal">
+            <div class="about-photo-placeholder">
+                <p>Здесь будет ваше фото и короткая подпись</p>
             </div>
         </div>
-    </section>
-
-    <!-- PRICING -->
-    <section class="pricing-section container">
-        <div class="section-header">
-            <h2>Инвестиции в систему</h2>
-            <p>Выбирайте комфортный формат взаимодействия.</p>
+        <div class="reveal reveal-d1">
+            <div class="eyebrow">Кто ведет программу</div>
+            <h2>Обо мне</h2>
+            <p class="about-text">Тут можно написать о себе: чем занимаетесь, сколько лет в теме, как пришли к этому формату, с кем работаете и что для вас важно в работе с людьми.</p>
+            <div class="about-hint">Подсказка: «Вот уже N лет я помогаю... Мой подход строится на... Для меня важно, чтобы...» - пишите так, как рассказали бы при знакомстве.</div>
         </div>
-        
+    </div>
+</section>
+
+<section class="formula-section">
+    <div class="container reveal">
+        <h2>Декомпозиция вашей цели</h2>
+        <p class="sub">Правильная конверсия и высокий чек. Всё остальное - математика.</p>
+        <div class="formula-box">
+            <div class="formula-text">5 клиентов × <span>100 000₽</span> = <span>500 000₽</span></div>
+        </div>
+        <p class="formula-note" style="margin-top:32px;">Один продукт. Пять клиентов в месяц. Понятный путь к результату.</p>
+    </div>
+</section>
+
+<section class="phases-section" id="phases">
+    <div class="container">
+        <div class="eyebrow reveal" style="text-align:center;">Архитектура продукта: 8 недель работы</div>
+        <h2 class="section-title reveal">Три фазы, один результат</h2>
+        <p class="section-sub reveal">Каждую неделю - конкретные действия. Мы внедряем вместе, я контролирую процесс лично.</p>
+
+        <div class="phases">
+            <div class="phase reveal">
+                <div class="phase-num-col"><div class="phase-num">01</div></div>
+                <div class="phase-body">
+                    <div class="phase-week">Недели 1-2</div>
+                    <h3>Фундамент и первые деньги</h3>
+                    <p>Люди платят за решение сложных проблем. Мы уходим от разовых консультаций и проектируем продукт с чеком от 50 до 300 тысяч. Первые продажи делаем по вашей теплой базе.</p>
+                    <div class="phase-tags">
+                        <span class="tag">Личная 1-to-1 сессия</span>
+                        <span class="tag">Оффер с высоким чеком</span>
+                        <span class="tag">Первые 3-4 клиента</span>
+                    </div>
+                </div>
+                <div class="phase-mockup">
+                    <div class="mini-mockup">
+                        <div class="mm-header"><div class="mm-dot mm-dot-r"></div><div class="mm-dot mm-dot-y"></div><div class="mm-dot mm-dot-g"></div></div>
+                        <div class="mm-body">
+                            <div class="mm-line mm-line-med"></div>
+                            <div class="mm-line mm-line-gold" style="width:100%;height:28px;border-radius:8px;"></div>
+                            <div class="mm-line mm-line-short"></div>
+                            <div class="mm-line" style="width:70%;"></div>
+                            <div class="mm-line mm-line-gold" style="width:45%;height:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase reveal reveal-d1">
+                <div class="phase-num-col"><div class="phase-num">02</div></div>
+                <div class="phase-body">
+                    <div class="phase-week">Недели 3-6</div>
+                    <h3>Система конверсии</h3>
+                    <p>Выстраиваем предсказуемую воронку. Аудитория прогревается через ваш экспертный контент в правильной последовательности. Заявки идут стабильно, даже при скромных охватах.</p>
+                    <div class="phase-tags">
+                        <span class="tag">Контент-система</span>
+                        <span class="tag">Воронка продаж</span>
+                        <span class="tag">Работа с микро-охватами</span>
+                    </div>
+                </div>
+                <div class="phase-mockup">
+                    <div class="mini-mockup">
+                        <div class="mm-header"><div class="mm-dot mm-dot-r"></div><div class="mm-dot mm-dot-y"></div><div class="mm-dot mm-dot-g"></div></div>
+                        <div class="mm-chat-mini">
+                            <div class="mm-msg mm-msg-in">Увидела ваш пост, хочу узнать подробнее</div>
+                            <div class="mm-msg mm-msg-out">Расскажу, как можем поработать</div>
+                            <div class="mm-msg mm-msg-in">Когда можно созвониться?</div>
+                            <div class="mm-msg mm-msg-out">Завтра в 12:00 удобно?</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase reveal reveal-d2">
+                <div class="phase-num-col"><div class="phase-num">03</div></div>
+                <div class="phase-body">
+                    <div class="phase-week">Недели 7-8</div>
+                    <h3>Масштабирование и свобода</h3>
+                    <p>Модель работает, клиенты приходят, юнит-экономика сошлась. Снижаем затраты времени: делегируем механику, собираем маленькую команду. Онлайн занимает 3-4 часа в день.</p>
+                    <div class="phase-tags">
+                        <span class="tag">Делегирование</span>
+                        <span class="tag">Стабильные 500K+ в месяц</span>
+                        <span class="tag">Ассистент + монтажер</span>
+                    </div>
+                </div>
+                <div class="phase-mockup">
+                    <div class="mini-mockup">
+                        <div class="mm-header"><div class="mm-dot mm-dot-r"></div><div class="mm-dot mm-dot-y"></div><div class="mm-dot mm-dot-g"></div></div>
+                        <div class="mm-body" style="gap:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div class="mm-line" style="width:40%;height:6px;"></div>
+                                <div style="font-size:10px;color:var(--gold);font-weight:700;">500K ✓</div>
+                            </div>
+                            <div style="width:100%;height:10px;background:var(--sand);border-radius:5px;overflow:hidden;">
+                                <div style="width:100%;height:100%;background:var(--gold);border-radius:5px;"></div>
+                            </div>
+                            <div class="mm-line mm-line-short" style="height:6px;"></div>
+                            <div class="mm-line" style="width:50%;height:6px;"></div>
+                            <div style="display:flex;gap:6px;margin-top:4px;">
+                                <div style="flex:1;height:24px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:6px;"></div>
+                                <div style="flex:1;height:24px;background:var(--sand);border-radius:6px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="included">
+    <div class="container">
+        <div class="eyebrow reveal" style="text-align:center;">Формат работы</div>
+        <h2 class="section-title reveal">Что входит в программу</h2>
+        <p class="section-sub reveal">Вы получаете доступ ко мне, к команде специалистов и ко всем материалам.</p>
+        <div class="inc-grid">
+            <div class="inc-item reveal"><span class="inc-icon">🎯</span><h4>Личный созвон 1-to-1</h4><p>Стартовый разбор проекта. На нем создаем оффер, модель дохода и пошаговый план на 60 дней.</p></div>
+            <div class="inc-item reveal reveal-d1"><span class="inc-icon">📞</span><h4>Два созвона в неделю</h4><p>Персональные разборы и групповые практикумы. Живой формат, можно задать любой вопрос.</p></div>
+            <div class="inc-item reveal reveal-d2"><span class="inc-icon">💬</span><h4>Чат с ответами за 24 часа</h4><p>Группа участников и доступ ко мне. Задали вопрос - получили ответ в течение суток.</p></div>
+            <div class="inc-item reveal"><span class="inc-icon">📚</span><h4>База знаний навсегда</h4><p>Воркшопы, шаблоны, скрипты, сценарии. Плюс все будущие материалы.</p></div>
+            <div class="inc-item reveal reveal-d1"><span class="inc-icon">👥</span><h4>Проверенные подрядчики</h4><p>Дизайнеры, монтажеры, ассистенты. Те, кого я рекомендую из своего опыта.</p></div>
+            <div class="inc-item reveal reveal-d2"><span class="inc-icon">🔒</span><h4>До 10 человек в группе</h4><p>Каждый участник получает столько внимания, сколько нужно. Ручная работа с каждым.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="testi">
+    <div class="container">
+        <div class="eyebrow reveal" style="text-align:center;">Результаты участников</div>
+        <h2 class="section-title reveal">Что говорят те, кто уже работал со мной</h2>
+        <p class="section-sub reveal">Сюда можно добавить отзывы. Лучше всего работают конкретные истории: что было, что стало, за какой срок.</p>
+        <div class="testi-grid">
+            <div class="testi-card reveal"><div class="testi-quote">«Здесь будет отзыв участника. 2-3 предложения: что изменилось, какие цифры, что было ключевым.»</div><div class="testi-author"><div class="testi-ava">—</div><div><div class="testi-name">Имя</div><div class="testi-role">ниша, город</div></div></div></div>
+            <div class="testi-card reveal reveal-d1"><div class="testi-quote">«Второй отзыв. Хорошо, если участники из разных ниш - читатель узнает кого-то похожего на себя.»</div><div class="testi-author"><div class="testi-ava">—</div><div><div class="testi-name">Имя</div><div class="testi-role">ниша, город</div></div></div></div>
+            <div class="testi-card reveal reveal-d2"><div class="testi-quote">«Третий отзыв. Можно добавить скриншоты или видео - блок легко расширяется.»</div><div class="testi-author"><div class="testi-ava">—</div><div><div class="testi-name">Имя</div><div class="testi-role">ниша, город</div></div></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="container">
+        <div class="eyebrow reveal" style="text-align:center;">Инвестиции в систему</div>
+        <h2 class="section-title reveal">Выбирайте комфортный формат</h2>
+        <p class="section-sub reveal">Можно начать с одной недели и попробовать, или зайти сразу на всю программу.</p>
         <div class="price-grid">
-            <div class="price-card">
-                <h4>Спринт / Тест-драйв</h4>
-                <p>Идеально для тех, кто хочет проверить систему в деле без риска всей суммой. Оплата понедельно.</p>
-                <div class="amount">20 000₽ <span style="font-size: 18px; color: var(--text-secondary); font-weight: 500;">/ неделя</span></div>
-                <ul class="artifact-list" style="margin-bottom: 30px;">
-                    <li>1-to-1 разбор со мной</li>
-                    <li>Упакованный продукт за 7 дней</li>
-                    <li>План действий на 2 месяца</li>
+            <div class="price-card reveal">
+                <div class="price-tier">Понедельно</div>
+                <div class="price-amount">20 000₽</div>
+                <div class="price-period">в неделю</div>
+                <p class="price-desc">Стартуете, получаете оффер, первых клиентов и план. Дальше решаете сами.</p>
+                <ul class="price-features">
+                    <li>Созвон один на один</li>
+                    <li>Готовый продукт и оффер</li>
+                    <li>План на 60 дней</li>
+                    <li>Групповой созвон</li>
+                    <li>Доступ к материалам</li>
                 </ul>
-                <a href="#" class="btn btn-outline">Начать со спринта</a>
+                <a href="#" class="btn btn-ghost" style="width:100%;">Написать</a>
             </div>
-
-            <div class="price-card premium">
-                <div class="badge">Выгодно</div>
-                <h4>Полное сопровождение</h4>
-                <p>Доступ ко всем материалам, мини-группе и моему личному контролю на протяжении всех 60 дней.</p>
-                <div class="amount">120 000₽ <span style="font-size: 18px; color: var(--text-secondary); font-weight: 500;">/ разово</span></div>
-                <ul class="artifact-list" style="margin-bottom: 30px;">
-                    <li>Экономия 40 000₽ (от цены по неделям)</li>
-                    <li>Полный доступ к базе знаний навсегда</li>
-                    <li>Доступ к моим подрядчикам</li>
+            <div class="price-card featured reveal reveal-d1">
+                <div class="price-tier">Вся программа</div>
+                <div class="price-amount">120 000₽</div>
+                <div class="price-period">разовый платеж</div>
+                <p class="price-desc">8 недель работы вместе. Полное сопровождение, масштабирование, команда.</p>
+                <ul class="price-features">
+                    <li>Все из понедельного формата</li>
+                    <li>8 недель личного ведения</li>
+                    <li>2 созвона в неделю</li>
+                    <li>Чат с ответами за 24 часа</li>
+                    <li>Сообщество участников</li>
+                    <li>Вечный доступ к базе</li>
                 </ul>
-                <a href="#" class="btn">Написать код «500К»</a>
+                <a href="#" class="btn btn-dark" style="width:100%;">Написать «500К»</a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<section class="faq">
+    <div class="container">
+        <div class="eyebrow reveal" style="text-align:center;">Вопросы</div>
+        <h2 class="section-title reveal">Частые вопросы</h2>
+        <div class="faq-list">
+            <div class="faq-item reveal"><button class="faq-q">Подойдет, если у меня мало подписчиков?</button><div class="faq-a"><p>Да. Вся система построена на работе с небольшой аудиторией. 5 клиентов по 100 тысяч - это правильный продукт и точечная работа с теми, кто уже рядом.</p></div></div>
+            <div class="faq-item reveal"><button class="faq-q">Чем отличается от обычного курса?</button><div class="faq-a"><p>Я работаю вместе с вами: разбираю ваш проект, вместе собираем продукт, тестируем, правим. Это совместная работа, где я лично веду каждого.</p></div></div>
+            <div class="faq-item reveal"><button class="faq-q">Что если после первой недели пойму, что мне не подходит?</button><div class="faq-a"><p>Понедельный формат как раз для этого. Вы платите 20 тысяч за неделю, получаете оффер, план и первых клиентов. Если хотите остановиться - просто не продолжаете.</p></div></div>
+            <div class="faq-item reveal"><button class="faq-q">Сколько времени нужно уделять?</button><div class="faq-a"><p>В активной фазе примерно 5-7 часов в неделю: созвоны и внедрение. К восьмой неделе цель - 3-4 часа в день на весь онлайн, остальное - ваша жизнь.</p></div></div>
+            <div class="faq-item reveal"><button class="faq-q">Есть гарантия результата?</button><div class="faq-a"><p>Гарантий нет. Результат - это совместный труд. Модель прозрачна, а понедельный формат дает возможность попробовать на практике, прежде чем идти дальше.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="final-cta">
+    <div class="container reveal">
+        <h2>Готовы собрать систему,<br>которая <em>работает на вас?</em></h2>
+        <p>Напишите «500К» в Telegram. Расскажу подробности и отвечу на вопросы.</p>
+        <a href="#" class="btn btn-gold">Написать в Telegram</a>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container"><p>© 2025</p></div>
+</footer>
+
+<script>
+const reveals=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');});},{threshold:.1});
+reveals.forEach(el=>obs.observe(el));
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);});
+document.querySelectorAll('.faq-q').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const item=btn.parentElement;const open=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+        if(!open)item.classList.add('open');
+    });
+});
+</script>
 
 </body>
 </html>
